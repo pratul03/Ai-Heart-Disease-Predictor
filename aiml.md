@@ -1,3 +1,0 @@
-```
-    soumyadip chatterjee
-```
