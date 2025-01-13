@@ -41,6 +41,8 @@ const userSchema = new mongoose.Schema({
       },
     },
   },
+  avatar: { type: String, default: "default1.png" }, // New field
+  badges: [{ type: String }], // New field
   createdAt: { type: Date, default: Date.now },
 });
 
