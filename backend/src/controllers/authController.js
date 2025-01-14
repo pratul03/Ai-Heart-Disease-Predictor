@@ -1,6 +1,6 @@
 import User from "../model/user.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import cloudinary from "../config/cloudinary.js";
 
@@ -45,7 +45,7 @@ export const signup = async (req, res) => {
     const newUser = new User({
       name,
       email,
-      password: await bcrypt.hash(password, 10),
+      password,
       location: {
         type: "Point",
         coordinates: [location.longitude, location.latitude],
@@ -54,6 +54,7 @@ export const signup = async (req, res) => {
     });
 
     await newUser.save();
+    console.log(newUser);
 
     // Generate JWT token
     const token = generateToken(newUser._id);
@@ -71,13 +72,15 @@ export const login = async (req, res) => {
     // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid Email" });
     }
 
     // Compare password
-    const isMatch = await user.comparePassword(password);
+    // Compare password explicitly
+    const isMatch = await bcrypt.compare(password.trim(), user.password);
+    console.log(password, user.password, isMatch);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid password" });
     }
 
     // Generate JWT token
@@ -97,11 +100,9 @@ export const updateUser = async (req, res) => {
 
     // Ensure the authenticated user is updating their own data
     if (userId !== targetUserId) {
-      return res
-        .status(403)
-        .json({
-          message: "You are not authorized to update this user's data.",
-        });
+      return res.status(403).json({
+        message: "You are not authorized to update this user's data.",
+      });
     }
 
     // Find the user by ID
