@@ -1,10 +1,12 @@
 import mongoose, { Document, Schema } from "mongoose";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
+  age: number;
+  sex: string;
   location: {
     type: string;
     coordinates: [number, number];
@@ -29,17 +31,22 @@ const userSchema: Schema = new Schema({
     },
   },
   password: { type: String, required: true },
+  age: { type: Number, required: true },
+  sex: { type: String, required: true },
   location: {
     type: {
       type: String,
       enum: ["Point"],
       default: "Point",
+      required: true, // Ensure type is always present
     },
     coordinates: {
       type: [Number],
-      required: true,
+      required: false,
+      default: [20.5937, 78.9629], // Default coordinates if not provided
       validate: {
-        validator: function (coordinates: [number, number]) {
+        validator(coordinates: [number, number]) {
+          coordinates = [20.5937, 78.9629];
           return (
             Array.isArray(coordinates) &&
             coordinates.length === 2 &&

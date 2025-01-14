@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import User from "@/models/User";
 import dbConnect from "@/lib/mongodb";
-import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   const headers = new Headers();
@@ -14,12 +13,12 @@ export async function POST(req: Request) {
     await dbConnect();
 
     // Parse the request body
-    const { name, email, password, location } = await req.json();
+    const { name, email, password, location, age, sex } = await req.json();
 
     // Validate required fields (name, email, password are required)
-    if (!name || !email || !password) {
+    if (!name || !email || !password || (!age && age > 0) || sex) {
       return NextResponse.json(
-        { message: "Name, email, and password are required" },
+        { message: "Name, email, age, sex and password are required" },
         { status: 400, headers }
       );
     }
@@ -33,14 +32,13 @@ export async function POST(req: Request) {
       );
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     // Create a new user with the provided data
     const newUser = new User({
       name,
       email,
-      password: hashedPassword,
+      password,
+      age,
+      sex,
       ...(location && {
         location: {
           type: "Point",

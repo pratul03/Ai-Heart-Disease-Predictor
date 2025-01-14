@@ -11,11 +11,22 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [age, setAge] = useState(0);
+  const [sex, setSex] = useState("");
   const [password, setPassword] = useState("");
   const [location, setLocation] = useState<{
     latitude: number | null;
@@ -56,7 +67,7 @@ export default function RegisterPage() {
     e.preventDefault();
 
     // Validate required fields
-    if (!name || !email || !password) {
+    if (!name || !email || !password || (!age && age > 0) || !sex) {
       setError("Name, email, and password are required.");
       return;
     }
@@ -71,6 +82,8 @@ export default function RegisterPage() {
           name,
           email,
           password,
+          age,
+          sex,
           ...(isLocationEnabled &&
             location.latitude &&
             location.longitude && {
@@ -123,6 +136,52 @@ export default function RegisterPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
+            </div>
+            <div>
+              <Label htmlFor="age">Age</Label>
+              <Input
+                id="age"
+                type="number"
+                required
+                value={age}
+                onChange={(e) => setAge(e.target.valueAsNumber)}
+              />
+            </div>
+            <div>
+              <Select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select your gender" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Gender</SelectLabel>
+                    <SelectItem
+                      value="Male"
+                      onChange={(e) =>
+                        setSex((e.target as HTMLSelectElement).value)
+                      }
+                    >
+                      Male
+                    </SelectItem>
+                    <SelectItem
+                      value="Female"
+                      onChange={(e) =>
+                        setSex((e.target as HTMLSelectElement).value)
+                      }
+                    >
+                      Female
+                    </SelectItem>
+                    <SelectItem
+                      value="Others"
+                      onChange={(e) =>
+                        setSex((e.target as HTMLSelectElement).value)
+                      }
+                    >
+                      Others
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="password">Password</Label>
