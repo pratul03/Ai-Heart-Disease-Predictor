@@ -1,9 +1,19 @@
 import express from "express";
-import { signup, login } from "../controllers/authController.js";
+import { signup, login, updateUser } from "../controllers/authController.js";
+import upload from "../config/multer.js";
+import { authMiddleware as authenticate } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/signup", signup);
+router.post("/signup", upload.single("avatar"), signup);
+
 router.post("/login", login);
+
+router.put(
+  "/update/:userId",
+  authenticate, // Ensure the user is authenticated
+  upload.single("avatar"), // Handle avatar upload
+  updateUser
+);
 
 export default router;
