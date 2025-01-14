@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
     coordinates: {
       type: [Number], // [longitude, latitude]
       required: false,
+      default:[20.5937,78.9629]
       validate: {
         validator: function (coordinates) {
           return (
