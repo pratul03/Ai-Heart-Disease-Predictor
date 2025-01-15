@@ -1,3 +1,0 @@
-'''
-   Pratul Makar
-'''
