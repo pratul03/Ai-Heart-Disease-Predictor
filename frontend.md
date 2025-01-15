@@ -1,3 +1,0 @@
-''' 
-   Pritam Mandal
-'''
