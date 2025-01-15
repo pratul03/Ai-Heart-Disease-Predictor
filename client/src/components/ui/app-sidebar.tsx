@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, Home, Files, MonitorCog, Settings, UsersRound, ContactRound, User2, ChevronUp } from "lucide-react"
 
 import {
   Sidebar,
@@ -6,12 +6,12 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu"
 
 const items = [
   {
@@ -22,27 +22,27 @@ const items = [
   {
     title: "Meetings",
     url: "#",
-    icon: Inbox,
+    icon: Calendar,
   },
   {
     title: "Tools",
     url: "#",
-    icon: Calendar,
+    icon: MonitorCog,
   },
   {
     title: "Community",
     url: "#",
-    icon: Search,
+    icon: UsersRound,
   },
   {
     title: "Resources",
     url: "#",
-    icon: Settings,
+    icon: Files,
   },
   {
     title: "Contact Us",
     url: "#",
-    icon: Settings,
+    icon: ContactRound,
   },
 ]
 
@@ -52,12 +52,11 @@ export function AppSidebar() {
       <SidebarContent>
       <SidebarHeader />
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                <SidebarMenuItem key={item.title} >
+                  <SidebarMenuButton asChild tooltip={item.title}>
                     <a href={item.url}>
                       <item.icon className="w-20 h-20" />
                       <span>{item.title}</span>
@@ -68,7 +67,34 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarFooter />
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton>
+                    <User2 /> Username
+                    <ChevronUp className="ml-auto" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-[--radix-popper-anchor-width]"
+                >
+                  <DropdownMenuItem>
+                    <span>Account</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Billing</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Sign out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
       </SidebarContent>
     </Sidebar>
   )
