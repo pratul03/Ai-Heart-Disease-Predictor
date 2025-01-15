@@ -41,6 +41,16 @@ export const signup = async (req, res) => {
       avatarUrl = randomAvatar;
     }
 
+    // Handle location coordinates
+    let coordinates = [20.5937, 78.9629]; // Default coordinates
+    if (
+      location &&
+      location.longitude !== undefined &&
+      location.latitude !== undefined
+    ) {
+      coordinates = [location.longitude, location.latitude];
+    }
+
     // Create new user
     const newUser = new User({
       name,
@@ -48,7 +58,7 @@ export const signup = async (req, res) => {
       password,
       location: {
         type: "Point",
-        coordinates: [location.longitude, location.latitude],
+        coordinates, // Use the coordinates (default or provided)
       },
       avatar: avatarUrl, // Save the Cloudinary URL
     });

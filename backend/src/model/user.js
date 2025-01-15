@@ -15,6 +15,13 @@ const userSchema = new mongoose.Schema({
       message: "Invalid email format.",
     },
   },
+  age: {
+    type: Number,
+    required: true,
+    min: [1, "You must be at least 1 years old."],
+    max: [120, "You cannot be older than 120 years."],
+  }, //
+  sex: { type: String, required: true },
   password: { type: String, required: true },
   location: {
     type: {
@@ -24,7 +31,8 @@ const userSchema = new mongoose.Schema({
     },
     coordinates: {
       type: [Number], // [longitude, latitude]
-      required: true,
+      required: false,
+      default: [20.5937, 78.9629], // Default coordinates if not provided
       validate: {
         validator: function (coordinates) {
           return (
