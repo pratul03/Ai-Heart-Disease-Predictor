@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/ui/app-sidebar";
 import Dashboard from "./pages/Dashboard";
 import { Toaster } from "sonner";
+import { RecoilRoot } from "recoil";
 
 function LayoutWithSidebar({ children }: any) {
   return (
@@ -20,7 +21,7 @@ function LayoutWithSidebar({ children }: any) {
 
 function App() {
   return (
-    <>
+    <RecoilRoot>
     <Toaster />
       <BrowserRouter>
         <Routes>
@@ -35,7 +36,7 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
-    </>
+    </RecoilRoot>
   );
 }
 

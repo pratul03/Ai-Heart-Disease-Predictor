@@ -20,9 +20,12 @@ import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { userAtom } from "@/store/atom/atom";
 
 export function Auth({ label }: { label: string }) {
   const navigate = useNavigate();
+  const setUser = useSetRecoilState(userAtom);
 
   const [signin, setSignin] = useState({
     email: "",
@@ -85,13 +88,14 @@ export function Auth({ label }: { label: string }) {
                   onClick={async () => {
                     toast.promise(
                       axios.post(
-                        "http://localhost:8080/api/auth/signin",
+                        "http://localhost:8080/api/auth/login",
                         signin
                       ),
                       {
                         loading: "Signing in...",
                         success: (response) => {
                           localStorage.setItem("token", response.data.token);
+                          setUser(response.data.user);
                           navigate("/dashboard");
                           return "Signed in successfully!";
                         },
@@ -163,11 +167,12 @@ export function Auth({ label }: { label: string }) {
                         loading: "Signing up...",
                         success: (response) => {
                           localStorage.setItem("token", response.data.token);
+                          setUser(response.data.user);
                           navigate("/dashboard");
                           return "Account created successfully!";
                         },
                         error: (response) => {
-                          return response.data.message;
+                          return response.data?response.data.message:"Internal server error!";
                         },
                       }
                     );
