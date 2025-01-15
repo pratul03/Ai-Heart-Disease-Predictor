@@ -9,7 +9,7 @@ import { RecoilRoot } from "recoil";
 
 function LayoutWithSidebar({ children }: any) {
   return (
-    <SidebarProvider>
+    <SidebarProvider >
       <AppSidebar />
       <main>
         <SidebarTrigger />
