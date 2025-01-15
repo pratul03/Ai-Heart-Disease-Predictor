@@ -20,7 +20,7 @@ const generateToken = (userId) => {
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, password, location } = req.body;
+    const { name, email, password, location, age, sex } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -56,6 +56,8 @@ export const signup = async (req, res) => {
       name,
       email,
       password,
+      age,
+      sex,
       location: {
         type: "Point",
         coordinates, // Use the coordinates (default or provided)
