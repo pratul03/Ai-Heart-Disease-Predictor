@@ -14,15 +14,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { userAtom } from "@/store/atom/atom";
 
 export function Auth({ label }: { label: string }) {
   const navigate = useNavigate();
+  const setUser = useSetRecoilState(userAtom);
 
   const [signin, setSignin] = useState({
     email: "",
@@ -33,6 +44,8 @@ export function Auth({ label }: { label: string }) {
     name: "",
     email: "",
     password: "",
+    age: 0,
+    sex: "",
   });
 
   return (
@@ -62,10 +75,11 @@ export function Auth({ label }: { label: string }) {
                   <Label htmlFor="username">Username/Email</Label>
                   <Input
                     id="username"
-                    defaultValue="john123@xyz.com"
+                    placeholder="john123@xyz.com"
                     onInput={(e) => {
                       setSignin({ ...signin, email: e.currentTarget.value });
                     }}
+                    required
                   />
                 </div>
                 <div className="space-y-1">
@@ -76,6 +90,7 @@ export function Auth({ label }: { label: string }) {
                     onInput={(e) => {
                       setSignin({ ...signin, password: e.currentTarget.value });
                     }}
+                    required
                   />
                 </div>
               </CardContent>
@@ -85,13 +100,14 @@ export function Auth({ label }: { label: string }) {
                   onClick={async () => {
                     toast.promise(
                       axios.post(
-                        "http://localhost:8080/api/auth/signin",
+                        "http://192.168.0.121:8080/api/auth/login",
                         signin
                       ),
                       {
                         loading: "Signing in...",
                         success: (response) => {
                           localStorage.setItem("token", response.data.token);
+                          setUser(response.data.user);
                           navigate("/dashboard");
                           return "Signed in successfully!";
                         },
@@ -122,10 +138,11 @@ export function Auth({ label }: { label: string }) {
                   <Label htmlFor="name">Name</Label>
                   <Input
                     id="name"
-                    defaultValue={"John Doe"}
+                    placeholder="John Doe"
                     onInput={(e) => {
                       setSignup({ ...signup, name: e.currentTarget.value });
                     }}
+                    required
                   />
                 </div>
                 <div className="space-y-1">
@@ -133,11 +150,41 @@ export function Auth({ label }: { label: string }) {
                   <Input
                     id="email"
                     type="email"
-                    defaultValue={"john123@xyz.com"}
+                    placeholder="john123@xyz.com"
                     onInput={(e) => {
                       setSignup({ ...signup, email: e.currentTarget.value });
                     }}
+                    required
                   />
+                </div>
+                <div className="flex flex-row items-center">
+                  <div className="m-0.5">
+                    <Label htmlFor="age">Age</Label>
+                    <Input
+                      id="age"
+                      type="number"
+                      placeholder="20-90"
+                      onInput={(e) => {
+                        setSignup({ ...signup, age: parseInt(e.currentTarget.value) });
+                      }}
+                      required
+                    />
+                  </div>
+                  <div className="m-0.5">
+                    <Label htmlFor="gender">Gender</Label>
+                    <Select onValueChange={(value)=> setSignup({...signup, sex: value})}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select your Gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="others">Others</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="password">Password</Label>
@@ -147,6 +194,7 @@ export function Auth({ label }: { label: string }) {
                     onInput={(e) => {
                       setSignup({ ...signup, password: e.currentTarget.value });
                     }}
+                    required
                   />
                 </div>
               </CardContent>
@@ -156,18 +204,21 @@ export function Auth({ label }: { label: string }) {
                   onClick={async () => {
                     toast.promise(
                       axios.post(
-                        "http://localhost:8080/api/auth/signup",
+                        "http://192.168.0.121:8080/api/auth/signup",
                         signup
                       ),
                       {
                         loading: "Signing up...",
                         success: (response) => {
                           localStorage.setItem("token", response.data.token);
+                          setUser(response.data.user);
                           navigate("/dashboard");
                           return "Account created successfully!";
                         },
                         error: (response) => {
-                          return response.data.message;
+                          return response.data
+                            ? response.data.message
+                            : "Internal server error!";
                         },
                       }
                     );

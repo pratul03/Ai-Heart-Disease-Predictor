@@ -1,4 +1,14 @@
-import { Calendar, Home, Files, MonitorCog, Settings, UsersRound, ContactRound, User2, ChevronUp } from "lucide-react"
+import {
+  Calendar,
+  Home,
+  Files,
+  MonitorCog,
+  UsersRound,
+  ContactRound,
+  User2,
+  ChevronUp,
+  Codesandbox,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -10,8 +20,17 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu"
+} from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
+import { useRecoilValue } from "recoil";
+import { userAtom } from "@/store/atom/atom";
+import { Button } from "./button";
+import { useNavigate } from "react-router-dom";
 
 const items = [
   {
@@ -44,21 +63,26 @@ const items = [
     url: "#",
     icon: ContactRound,
   },
-]
+];
 
 export function AppSidebar() {
+  const user = useRecoilValue(userAtom);
+  const navigate = useNavigate();
+
   return (
     <Sidebar collapsible="icon" variant="floating">
+      <SidebarHeader className="items-center">
+        <Codesandbox className="text-green-500" />
+      </SidebarHeader>
       <SidebarContent>
-      <SidebarHeader />
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title} >
+                <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title}>
                     <a href={item.url}>
-                      <item.icon className="w-20 h-20" />
+                      <item.icon />
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
@@ -67,35 +91,47 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuItem>
                   <SidebarMenuButton>
-                    <User2 /> Username
+                    <User2 className="text-orange-500" />
+                    <p className="ml-1">{user.name ? user.name : "Guest"}</p>
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="top"
-                  className="w-[--radix-popper-anchor-width]"
-                >
-                  <DropdownMenuItem>
-                    <span>Account</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Billing</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Sign out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
-      </SidebarContent>
+                </SidebarMenuItem>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="right"
+                className="ml-2 w-[--radix-popper-anchor-width]"
+              >
+                <DropdownMenuItem>
+                  <Button variant={"ghost"} className="p-0.5 h-4">
+                    Profile
+                  </Button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Button variant={"ghost"} className="p-0.5 h-4">
+                    Friends
+                  </Button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Button variant={"ghost"} className="p-0.5 h-4" onClick={() => {
+                    localStorage.removeItem("token");
+                    navigate("/")
+                  }}>
+                    Logout
+                  </Button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
