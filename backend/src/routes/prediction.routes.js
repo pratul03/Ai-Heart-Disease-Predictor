@@ -1,5 +1,5 @@
 import express from "express";
-import { createPrediction } from "../controllers/predictionController.js";
+import { createPrediction } from "../controllers/prediction.controller.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();

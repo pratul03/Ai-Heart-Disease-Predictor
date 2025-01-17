@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     coordinates: {
       type: [Number], // [longitude, latitude]
       required: false,
-      default:[20.5937,78.9629],
+      default: [20.5937, 78.9629],
       required: false,
       default: [20.5937, 78.9629], // Default coordinates if not provided
       validate: {
@@ -50,6 +50,10 @@ const userSchema = new mongoose.Schema({
           "Invalid coordinates. Longitude must be between -180 and 180, and latitude must be between -90 and 90.",
       },
     },
+  },
+  role: {
+    type: String,
+    default: "user",
   },
   avatar: { type: String, default: "default1.png" }, // New field
   badges: [{ type: String }], // New field

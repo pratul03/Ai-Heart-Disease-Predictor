@@ -106,7 +106,7 @@ export const login = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const { name, password } = req.body;
+    const { name, email, age, sex, password } = req.body;
     const userId = req.user.userId; // Extracted from the JWT token
     const targetUserId = req.params.userId; // User ID from the request params
 
@@ -123,10 +123,11 @@ export const updateUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update name if provided
-    if (name) {
-      user.name = name;
-    }
+    // Update fields if provided
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (age) user.age = age;
+    if (sex) user.sex = sex;
 
     // Update password if provided
     if (password) {
@@ -146,6 +147,7 @@ export const updateUser = async (req, res) => {
     // Generate a new JWT token (optional, if you want to refresh the token)
     const token = generateToken(user._id);
 
+    // Return the updated user data and token
     res.status(200).json({ token, user });
   } catch (error) {
     res.status(400).json({ message: error.message });
