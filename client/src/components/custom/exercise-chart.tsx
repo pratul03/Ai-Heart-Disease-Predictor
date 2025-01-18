@@ -39,7 +39,7 @@ export function Exercise() {
   return (
     <Card className="w-[600px] h-min">
       <CardHeader>
-        <CardTitle>Exercise Chart</CardTitle>
+        <CardTitle className="text-xl">Exercise Chart 🏃‍♂️‍➡️</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>

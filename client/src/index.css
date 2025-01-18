@@ -14,7 +14,7 @@
     --secondary: 188.7 94.5% 42.7%;
     --secondary-foreground: 197 78.9% 14.9%;
     --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 187 92.4% 69%;
+    --muted-foreground: 191.6 91.4% 36.5%;
     --accent: 194.4 69.6% 27.1%; /* */
     --accent-foreground: 187 92.4% 69%;
     --destructive: 0 84.2% 60.2%;
@@ -81,3 +81,24 @@
   }
 }
 
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 20px;
+    height: 20px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #fcb91d;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #da2020;
+    border-radius: 100vh;
+    border: 3px solid #f6f7ed;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #d61cae;
+  }
+}
