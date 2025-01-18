@@ -11,7 +11,7 @@ import { userAtom } from "@/store/atom/atom";
 import { useRecoilValue } from "recoil";
 import { Button } from "@/components/ui/button";
 
-const doctors = [
+export const doctors = [
   {
     name: "Dr. John Doe",
     image: "/doctor (1).jpg",
