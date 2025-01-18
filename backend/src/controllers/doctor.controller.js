@@ -16,6 +16,7 @@ export const registerDoctor = async (req, res) => {
       chamber,
       hospital_visits,
       qualifications,
+      overall_experience,
     } = req.body;
 
     // Input validation
@@ -26,7 +27,8 @@ export const registerDoctor = async (req, res) => {
       !gender ||
       !contact_info ||
       !fees ||
-      !qualifications
+      !qualifications ||
+      !overall_experience
     ) {
       return res
         .status(400)
@@ -56,6 +58,9 @@ export const registerDoctor = async (req, res) => {
       const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
     }
+    if (!overall_experience || overall_experience < 0) {
+      return res.status(400).json({ message: "Must have experience." });
+    }
 
     const newDoctor = new Doctor({
       name,
@@ -68,6 +73,7 @@ export const registerDoctor = async (req, res) => {
       chamber,
       hospital_visits,
       qualifications,
+      overall_experience,
     });
 
     await newDoctor.save();
@@ -124,6 +130,7 @@ export const getDoctors = async (req, res) => {
       minAge,
       maxAge,
       gender,
+      overall_experience,
     } = req.query;
 
     // Build the filter object

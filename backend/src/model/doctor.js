@@ -74,6 +74,7 @@ const doctorSchema = new mongoose.Schema({
       message: "At least one qualification is required.",
     },
   }, // Doctor's qualifications
+  overall_experience: { type: Number, required: true, min: 0 }, // Overall experience in years
   rating: { type: Number, default: 0, min: 0, max: 5 }, // Average rating from patients
   reviews: [
     {
