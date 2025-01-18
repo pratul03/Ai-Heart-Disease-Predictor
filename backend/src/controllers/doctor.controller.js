@@ -53,11 +53,7 @@ export const registerDoctor = async (req, res) => {
     let imageUrl =
       "https://res.cloudinary.com/dxnodvf4b/image/upload/v1737139372/doc_mytidw.avif";
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "doctors",
-        width: 500,
-        crop: "scale",
-      });
+      const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
     }
 

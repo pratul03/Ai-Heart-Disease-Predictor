@@ -5,7 +5,11 @@ const doctorSchema = new mongoose.Schema({
   specialization: { type: String, required: true }, // e.g., Cardiologist, Dermatologist, etc.
   age: { type: Number, required: true, min: 25, max: 75 }, // Age of the doctor
   gender: { type: String, required: true },
-  image: { type: String, default: "default1.png" },
+  image: {
+    type: String,
+    default:
+      "https://res.cloudinary.com/dxnodvf4b/image/upload/v1737139372/doc_mytidw.avif",
+  },
   contact_info: {
     phone: { type: String, required: true },
     email: {
@@ -55,7 +59,7 @@ const doctorSchema = new mongoose.Schema({
   qualifications: {
     type: [
       {
-        degree: { type: String, required: true }, // e.g., MBBS, MD, MS, etc.
+        degree: { type: String, required: true }, // e.g., M.B.B.S, MD, MS, etc.
         college: { type: String, required: true }, // Name of the college/university
         university: { type: String, required: true }, // Name of the university
         start_year: { type: Number, required: true }, // Start year of the degree

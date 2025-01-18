@@ -14,8 +14,12 @@ const defaultAvatars = [
   "https://res.cloudinary.com/dxnodvf4b/image/upload/v1736857549/avatar2_rgwwyy.png",
 ];
 
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "5h" });
+const generateToken = (userId, role) => {
+  const payLoad = { userId, role };
+  // checking payload success ✅ console.log(payLoad);
+  return jwt.sign(payLoad, process.env.JWT_SECRET, {
+    expiresIn: "5h",
+  });
 };
 
 export const signup = async (req, res) => {
@@ -31,11 +35,9 @@ export const signup = async (req, res) => {
     // Handle avatar upload
     let avatarUrl = "";
     if (req.file) {
-      // Upload to Cloudinary
       const result = await cloudinary.uploader.upload(req.file.path);
-      avatarUrl = result.secure_url; // Use the Cloudinary URL
+      avatarUrl = result.secure_url;
     } else {
-      // Assign a random default avatar from Cloudinary
       const randomAvatar =
         defaultAvatars[Math.floor(Math.random() * defaultAvatars.length)];
       avatarUrl = randomAvatar;
@@ -50,7 +52,7 @@ export const signup = async (req, res) => {
     ) {
       coordinates = [location.longitude, location.latitude];
     }
-
+    const defaultRole = "user";
     // Create new user
     const newUser = new User({
       name,
@@ -58,18 +60,19 @@ export const signup = async (req, res) => {
       password,
       age,
       sex,
+      role: defaultRole,
       location: {
         type: "Point",
-        coordinates, // Use the coordinates (default or provided)
+        coordinates,
       },
-      avatar: avatarUrl, // Save the Cloudinary URL
+      avatar: avatarUrl,
     });
 
     await newUser.save();
-    console.log(newUser);
+    console.log(`User created: ${newUser}`);
 
-    // Generate JWT token
-    const token = generateToken(newUser._id);
+    // ✅ Pass role to the token generator
+    const token = generateToken(newUser._id, newUser.role);
 
     res.status(201).json({ token, user: newUser });
   } catch (error) {
@@ -96,8 +99,7 @@ export const login = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = generateToken(user._id);
-
+    const token = generateToken(user._id, user.role);
     res.status(200).json({ token, user });
   } catch (error) {
     res.status(400).json({ message: error.message });

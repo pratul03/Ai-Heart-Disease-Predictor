@@ -1,6 +1,6 @@
 import multer from "multer";
-import { storage } from "./cloudinary.js";
+import { doctorStorage, storage } from "./cloudinary.js";
 
 const upload = multer({ storage });
-
-export default upload;
+const uploadDoctors = multer({ storage: doctorStorage });
+export { upload, uploadDoctors };
