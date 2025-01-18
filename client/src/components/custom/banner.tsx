@@ -26,7 +26,7 @@ function Banner() {
               <div className="p-1">
                 <Card>
                   <CardContent className="flex h-[220px] w-[1275px] items-center justify-center p-2">
-                    <img src={banner} alt="" className="rounded-md bg-cover" />
+                    <img src={banner} fetchPriority="low" alt="" className="rounded-md bg-cover" />
                   </CardContent>
                 </Card>
               </div>
