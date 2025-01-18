@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Doctor from "../model/doctor.js";
 import { configDotenv } from "dotenv";
 import cloudinary from "../config/cloudinary.js";
@@ -92,12 +93,98 @@ export const updateDoctor = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
+
+    // Validate the ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid Doctor ID" });
+    }
+
+    // Check if the doctor exists
+    const doctor = await Doctor.findById(id);
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Handle image upload if a file is provided
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      updateData.image = result.secure_url; // Update the image URL in the updateData
+    }
+
+    // Validate the updateData against the schema
+    const allowedUpdates = Object.keys(Doctor.schema.paths);
+    const isValidUpdate = Object.keys(updateData).every((key) =>
+      allowedUpdates.includes(key)
+    );
+
+    if (!isValidUpdate) {
+      return res.status(400).json({ message: "Invalid update fields" });
+    }
+
+    // Validate nested objects and arrays
+    if (updateData.contact_info?.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(updateData.contact_info.email)) {
+        return res.status(400).json({ message: "Invalid email format" });
+      }
+    }
+
+    if (updateData.chamber?.chamber_availability) {
+      for (const availability of updateData.chamber.chamber_availability) {
+        if (
+          !["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].includes(
+            availability.day
+          )
+        ) {
+          return res
+            .status(400)
+            .json({ message: "Invalid day in chamber availability" });
+        }
+      }
+    }
+
+    if (updateData.hospital_visits) {
+      for (const visit of updateData.hospital_visits) {
+        if (visit.days) {
+          for (const day of visit.days) {
+            if (
+              !["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].includes(day)
+            ) {
+              return res
+                .status(400)
+                .json({ message: "Invalid day in hospital visits" });
+            }
+          }
+        }
+      }
+    }
+
+    if (updateData.qualifications) {
+      for (const qualification of updateData.qualifications) {
+        if (
+          !qualification.degree ||
+          !qualification.college ||
+          !qualification.university ||
+          !qualification.start_year ||
+          !qualification.end_year
+        ) {
+          return res
+            .status(400)
+            .json({ message: "Invalid qualification data" });
+        }
+      }
+    }
+
+    // Perform the update
     const updatedDoctor = await Doctor.findByIdAndUpdate(id, updateData, {
       new: true,
+      runValidators: true, // Ensures Mongoose validators are run
     });
+
     if (!updatedDoctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
+
     res.status(200).json(updatedDoctor);
   } catch (error) {
     res.status(400).json({ message: error.message });
