@@ -8,6 +8,7 @@ import {
   User2,
   ChevronUp,
   Codesandbox,
+  Stethoscope
 } from "lucide-react";
 
 import {
@@ -35,18 +36,23 @@ import { useNavigate } from "react-router-dom";
 const items = [
   {
     title: "Dashboard",
-    url: "#",
+    url: "/dashboard",
     icon: Home,
   },
   {
     title: "Meetings",
-    url: "#",
+    url: "/meetings",
     icon: Calendar,
   },
   {
     title: "Tools",
-    url: "#",
+    url: "/tools",
     icon: MonitorCog,
+  },
+  {
+    title: "Doctors",
+    url: "/doctors",
+    icon: Stethoscope,
   },
   {
     title: "Community",
@@ -83,7 +89,7 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild tooltip={item.title}>
                     <a href={item.url}>
                       <item.icon />
-                      <span>{item.title}</span>
+                      <span className="font-semibold tracking-wide">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
