@@ -29,11 +29,12 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { userAtom } from "@/store/atom/atom";
+import { doctorAtom, userAtom } from "@/store/atom/atom";
 
 export function Auth({ label }: { label: string }) {
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userAtom);
+  const setDoctor = useSetRecoilState(doctorAtom);
 
   const [signin, setSignin] = useState({
     email: "",
@@ -107,8 +108,14 @@ export function Auth({ label }: { label: string }) {
                         loading: "Signing in...",
                         success: (response) => {
                           localStorage.setItem("token", response.data.token);
-                          setUser(response.data.user);
-                          navigate("/dashboard");
+                          if (response.data.user.role === "user") {
+                            setUser(response.data.user);
+                            navigate("/dashboard");
+                          } else if(response.data.user.role === "doctor") {
+                            setDoctor(response.data.user);
+                            navigate("/doctor-dashboard");
+                          }
+
                           return "Signed in successfully!";
                         },
                         error: (response) => {
@@ -165,14 +172,21 @@ export function Auth({ label }: { label: string }) {
                       type="number"
                       placeholder="20-90"
                       onInput={(e) => {
-                        setSignup({ ...signup, age: parseInt(e.currentTarget.value) });
+                        setSignup({
+                          ...signup,
+                          age: parseInt(e.currentTarget.value),
+                        });
                       }}
                       required
                     />
                   </div>
                   <div className="m-0.5">
                     <Label htmlFor="gender">Gender</Label>
-                    <Select onValueChange={(value)=> setSignup({...signup, sex: value})}>
+                    <Select
+                      onValueChange={(value) =>
+                        setSignup({ ...signup, sex: value })
+                      }
+                    >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Select your Gender" />
                       </SelectTrigger>
