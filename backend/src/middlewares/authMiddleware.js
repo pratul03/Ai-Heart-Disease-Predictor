@@ -50,3 +50,11 @@ export const adminMiddleware = (req, res, next) => {
   }
   next();
 };
+
+export const doctorMiddleware = (req, res, next) => { 
+  // ✅ Check if the user has the 'doctor' role
+  if (req.user.role !== "doctor") {
+    return res.status(403).json({ message: "Access denied. Doctors only." });
+  }
+  next();
+};

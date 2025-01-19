@@ -5,6 +5,8 @@ const doctorSchema = new mongoose.Schema({
   specialization: { type: String, required: true }, // e.g., Cardiologist, Dermatologist, etc.
   age: { type: Number, required: true, min: 25, max: 75 }, // Age of the doctor
   gender: { type: String, required: true },
+  password: { type: String, required: true },
+  role: { type: String, default: "doctor" },
   image: {
     type: String,
     default:
@@ -17,7 +19,7 @@ const doctorSchema = new mongoose.Schema({
       required: true,
       unique: true,
       validate: {
-        validator: function (email) {
+        validator(email) {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           return emailRegex.test(email);
         },

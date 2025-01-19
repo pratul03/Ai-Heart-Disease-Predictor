@@ -1,10 +1,36 @@
 import mongoose from "mongoose";
 import Doctor from "../model/doctor.js";
-import { configDotenv } from "dotenv";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import cloudinary from "../config/cloudinary.js";
-
+import { configDotenv } from "dotenv";
 configDotenv();
-// Create a new doctor
+
+const secretKey = process.env.JWT_SECRET;
+
+// Helper function to hash passwords
+const hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
+};
+
+// Helper function to compare passwords
+const comparePassword = async (password, hashedPassword) => {
+  return await bcrypt.compare(password, hashedPassword);
+};
+
+// Helper function to generate JWT token
+const generateToken = (doctor,role) => {
+  return jwt.sign(
+    { id: doctor._id, email: doctor.contact_info.email ,role},
+    secretKey,
+    {
+      expiresIn: "1h",
+    }
+  );
+};
+
+// Register a new doctor
 export const registerDoctor = async (req, res) => {
   try {
     const {
@@ -18,6 +44,7 @@ export const registerDoctor = async (req, res) => {
       hospital_visits,
       qualifications,
       overall_experience,
+      password,
     } = req.body;
 
     // Input validation
@@ -29,7 +56,8 @@ export const registerDoctor = async (req, res) => {
       !contact_info ||
       !fees ||
       !qualifications ||
-      !overall_experience
+      !overall_experience ||
+      !password
     ) {
       return res
         .status(400)
@@ -52,6 +80,9 @@ export const registerDoctor = async (req, res) => {
         .json({ message: "Doctor with this email already exists." });
     }
 
+    // Hash the password
+    const hashedPassword = await hashPassword(password);
+
     // Upload image to Cloudinary if provided
     let imageUrl =
       "https://res.cloudinary.com/dxnodvf4b/image/upload/v1737139372/doc_mytidw.avif";
@@ -59,22 +90,22 @@ export const registerDoctor = async (req, res) => {
       const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
     }
-    if (!overall_experience || overall_experience < 0) {
-      return res.status(400).json({ message: "Must have experience." });
-    }
 
+    // Create a new doctor
     const newDoctor = new Doctor({
       name,
       specialization,
       age,
       gender,
       image: imageUrl,
+      role: "doctor",
       contact_info,
       fees,
       chamber,
       hospital_visits,
       qualifications,
       overall_experience,
+      password: hashedPassword,
     });
 
     await newDoctor.save();
@@ -88,7 +119,33 @@ export const registerDoctor = async (req, res) => {
   }
 };
 
-// Update an existing doctor
+// Login a doctor
+export const loginDoctor = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Find the doctor by email
+    const doctor = await Doctor.findOne({ "contact_info.email": email });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found." });
+    }
+
+    // Compare passwords
+    const isMatch = await comparePassword(password, doctor.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials." });
+    }
+
+    // Generate JWT token
+    const token = generateToken(doctor,"doctor");
+    res.status(200).json({ message: "Login successful", token });
+  } catch (error) {
+    console.error("Error logging in doctor:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Update a doctor's details
 export const updateDoctor = async (req, res) => {
   try {
     const { id } = req.params;
@@ -175,6 +232,11 @@ export const updateDoctor = async (req, res) => {
       }
     }
 
+    // Hash the password if it's being updated
+    if (updateData.password) {
+      updateData.password = await hashPassword(updateData.password);
+    }
+
     // Perform the update
     const updatedDoctor = await Doctor.findByIdAndUpdate(id, updateData, {
       new: true,
@@ -185,9 +247,12 @@ export const updateDoctor = async (req, res) => {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
-    res.status(200).json(updatedDoctor);
+    res
+      .status(200)
+      .json({ message: "Doctor updated successfully", doctor: updatedDoctor });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error updating doctor:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -195,13 +260,45 @@ export const updateDoctor = async (req, res) => {
 export const deleteDoctor = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedDoctor = await Doctor.findByIdAndDelete(id);
-    if (!deletedDoctor) {
-      return res.status(404).json({ message: "Doctor not found" });
+
+    // Validate the ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid Doctor ID." });
     }
+
+    // Check if the doctor exists
+    const doctor = await Doctor.findByIdAndDelete(id);
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found." });
+    }
+
     res.status(200).json({ message: "Doctor deleted successfully" });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error deleting doctor:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// View appointments for a doctor
+export const viewAppointments = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate the ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid Doctor ID." });
+    }
+
+    // Find the doctor and populate the appointments
+    const doctor = await Doctor.findById(id).populate("appointments");
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found." });
+    }
+
+    res.status(200).json({ appointments: doctor.appointments });
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -267,8 +364,26 @@ export const getDoctors = async (req, res) => {
       filter.gender = gender;
     }
 
-    // Fetch doctors based on the filter
-    const doctors = await Doctor.find(filter);
+    // Fetch doctors based on the filter and select specific fields in the desired order
+    const doctors = await Doctor.find(filter).select({
+      name: 1,
+      age: 1,
+      image: 1,
+      gender: 1,
+      overall_experience: 1,
+      contact_info: 1,
+      chamber: 1,
+      hospital_visits: 1,
+      qualifications: 1,
+      reviews: 1,
+      rating: 1,
+      fees: 1,
+      specialization: 1,
+      createdAt: 1,
+      __v: 1,
+      _id: 1,
+    });
+
     res.status(200).json(doctors);
   } catch (error) {
     res.status(400).json({ message: error.message });
