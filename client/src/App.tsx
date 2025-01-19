@@ -11,11 +11,29 @@ import Tools from "./pages/Tools";
 import Doctors from "./pages/Doctors";
 import HeartRiskPredictor from "./pages/HeartRiskPredictor";
 import HeartRiskPredictorDemo from "./pages/HeartRiskPredictorDemo";
+import DoctorDashboard from "./pages/DoctorDashboard";
+import React from "react";
+import AppSidebarD from "./components/custom/app-sidebar-doctor";
 
-function LayoutWithSidebar({ children }: any) {
+type LayoutWithSidebarProps = {
+  children: React.ReactNode; 
+};
+
+function LayoutWithSidebar({ children }: LayoutWithSidebarProps) {
   return (
     <SidebarProvider >
       <AppSidebar />
+      <main>
+        <SidebarTrigger className="top-0 fixed"/>
+        {children}
+      </main>
+    </SidebarProvider>
+  );
+}
+function LayoutWithSidebarForDoctor({ children }: LayoutWithSidebarProps) {
+  return (
+    <SidebarProvider >
+      <AppSidebarD />
       <main>
         <SidebarTrigger className="top-0 fixed"/>
         {children}
@@ -27,7 +45,7 @@ function LayoutWithSidebar({ children }: any) {
 function App() {
   return (
     <RecoilRoot>
-    <Toaster />
+    <Toaster richColors/>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -70,6 +88,14 @@ function App() {
               <LayoutWithSidebar>
                 <Doctors />
               </LayoutWithSidebar>
+            }
+          />
+          <Route
+            path="/doctor-dashboard"
+            element={
+              <LayoutWithSidebarForDoctor>
+                <DoctorDashboard />
+              </LayoutWithSidebarForDoctor>
             }
           />
         </Routes>

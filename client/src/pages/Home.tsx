@@ -10,11 +10,18 @@ import Banner from "@/components/custom/banner";
 import Navigation from "@/components/custom/navigation";
 import { doctors } from "./Doctors";
 import Testimonials from "@/components/custom/testimonials";
-import { Codesandbox } from "lucide-react";
+import { Codesandbox, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 function Home() {
+  const customCommandMap = {
+    npm: "npm run shadcn add button",
+    yarn: "yarn shadcn add button",
+    pnpm: "pnpm dlx shadcn@latest add button",
+    bun: "bun x shadcn@latest add button",
+  };
   const navigate = useNavigate();
   return (
     <>
@@ -38,9 +45,15 @@ function Home() {
               detection saves lives.
             </p>
             <Auth label={"Get Started"} />
-            <Button variant={"outline"} onClick={() => {
-              navigate("/heart-disease-predictor"); 
-            }}>Try Heart Disease Risk Predictor</Button>
+            <Button
+              variant={"outline"}
+              onClick={() => {
+                navigate("/heart-disease-predictor");
+              }}
+              className="text-cyan-100"
+            >
+              Try Heart Disease Risk Predictor
+            </Button>
           </div>
           <div className="">
             <img src="/heart.svg" height={600} width={600} alt="" />
@@ -53,7 +66,7 @@ function Home() {
               Our Most Recommended Doctors
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-10">
-              {doctors.map((doctor) => {
+              {doctors.slice(0, 4).map((doctor) => {
                 return (
                   <Card className="w-[320px] h-[450px]">
                     <CardHeader>
@@ -67,15 +80,46 @@ function Home() {
                       <CardDescription className="flex justify-between items-center text-cyan-300">
                         <p className="text-xl font-semibold">{doctor.name}</p>
                         <p className="text-md font-semibold">
-                          Exp : {doctor.experience} +
+                          Exp : {doctor.overall_experience} +
                         </p>
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <p className="text-cyan-500 font-semibold mb-2">
-                        Expert in : {doctor.expertise}
+                        Expert in : {doctor.specialization}
                       </p>
-                      <p className="text-justify">{doctor.description}</p>
+                      <div className="flex justify-between items-center mt-5">
+                        <div>
+                          <p className="text-cyan-400">Qualifications : </p>
+                          {doctor.qualifications.slice(0,2).map((degree) => (
+                            <li className="list-inside text-slate-200">{degree}</li>
+                          ))}
+                        </div>
+                        <div className="flex gap-4">
+                          <Button
+                            variant={"outline"}
+                            onClick={() => {
+                              navigator.clipboard.writeText(
+                                doctor.contact_info.email
+                              );
+                              toast.success("Email copied to clipboard");
+                            }}
+                          >
+                            <Mail />
+                          </Button>
+                          <Button
+                            variant={"outline"}
+                            onClick={() => {
+                              navigator.clipboard.writeText(
+                                doctor.contact_info.phone
+                              );
+                              toast.success("Phone number copied to clipboard");
+                            }}
+                          >
+                            <Phone />
+                          </Button>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 );
@@ -132,23 +176,34 @@ function Home() {
           </div>
         </div>
         <div className="w-full h-full bg-gradient-to-bl from-purple-800 via-black to-rose-900">
-          <p className="text-5xl text-center mt-10 font-semibold text-cyan-100">Our Testimonials</p>
+          <p className="text-5xl text-center mt-10 font-semibold text-cyan-100">
+            Our Testimonials
+          </p>
           <div className="mt-10">
-          <Testimonials /> </div> 
+            <Testimonials />{" "}
+          </div>
         </div>
         <div className="w-full h-full flex flex-col bg-black py-10 text-cyan-100">
-          <div className="w-full flex justify-center items-center text-cyan-100 text-xl font-semibold"><Codesandbox size={"40px"} /> Project</div>
+          <div className="w-full flex justify-center items-center text-cyan-100 text-xl font-semibold">
+            <Codesandbox size={"40px"} /> Project
+          </div>
           <div className="flex flex-row justify-between items-center mx-10 mt-5 border py-2 px-4 rounded-md border-cyan-700">
             <p className="text-lg">&copy;2025, All Rights Reserved</p>
             <div>
-              <a href="#" className="text-lg mx-2 hover:underline">About Us</a>
-              <a href="#" className="text-lg mx-2 hover:underline">Privacy Policy</a>
-              <a href="#" className="text-lg mx-2 hover:underline">Terms of Service</a>
-              <a href="#" className="text-lg mx-2 hover:underline">Contact Us</a> 
+              <a href="#" className="text-lg mx-2 hover:underline">
+                About Us
+              </a>
+              <a href="#" className="text-lg mx-2 hover:underline">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-lg mx-2 hover:underline">
+                Terms of Service
+              </a>
+              <a href="#" className="text-lg mx-2 hover:underline">
+                Contact Us
+              </a>
             </div>
-            <div className="text-lg font-bold">
-              Developers
-            </div>
+            <div className="text-lg font-bold">Developers</div>
           </div>
         </div>
       </div>
