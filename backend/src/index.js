@@ -6,6 +6,7 @@ import connectDB from "./config/db.js"; // Import database connection
 import authRoutes from "./routes/auth.routes.js"; // Import authentication routes
 import doctorRoutes from "./routes/doctor.routes.js"; // Import doctor routes
 import predictionRoutes from "./routes/prediction.routes.js"; // Import prediction routes
+import appointmentRoutes from "./routes/appointment.routes.js"; // Import appointment routes
 
 dotenv.config();
 
@@ -40,7 +41,8 @@ app.get("/api/health", (req, res) => {
 // Routes
 app.use("/api/auth", authRoutes); // Authentication routes (signup, login)
 app.use("/api/predictions", predictionRoutes); // Prediction routes
-app.use("/api/doctors", doctorRoutes)
+app.use("/api/doctors", doctorRoutes); // Doctor routes
+app.use("/api/appointments", appointmentRoutes); // Appointment routes
 
 // Default route
 app.get("/", (req, res) => {

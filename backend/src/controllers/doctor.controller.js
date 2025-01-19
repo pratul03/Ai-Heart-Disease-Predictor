@@ -20,14 +20,10 @@ const comparePassword = async (password, hashedPassword) => {
 };
 
 // Helper function to generate JWT token
-const generateToken = (doctor,role) => {
-  return jwt.sign(
-    { id: doctor._id, email: doctor.contact_info.email ,role},
-    secretKey,
-    {
-      expiresIn: "1h",
-    }
-  );
+const generateToken = (docId, role) => {
+  return jwt.sign({ docId, role }, secretKey, {
+    expiresIn: "7h",
+  });
 };
 
 // Register a new doctor
@@ -109,10 +105,13 @@ export const registerDoctor = async (req, res) => {
     });
 
     await newDoctor.save();
+    const token = generateToken(newDoctor._id, "doctor");
 
-    res
-      .status(201)
-      .json({ message: "Doctor registered successfully", doctor: newDoctor });
+    res.status(201).json({
+      message: "Doctor registered successfully",
+      doctor: newDoctor,
+      token,
+    });
   } catch (error) {
     console.error("Error registering doctor:", error);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -137,8 +136,8 @@ export const loginDoctor = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = generateToken(doctor,"doctor");
-    res.status(200).json({ message: "Login successful", token });
+    const token = generateToken(doctor._id, "doctor");
+    res.status(200).json({ message: "Login successful", token, doctor });
   } catch (error) {
     console.error("Error logging in doctor:", error);
     res.status(500).json({ message: "Server error", error: error.message });
