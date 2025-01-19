@@ -11,8 +11,11 @@ import Navigation from "@/components/custom/navigation";
 import { doctors } from "./Doctors";
 import Testimonials from "@/components/custom/testimonials";
 import { Codesandbox } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
   return (
     <>
       <div className="z-0 w-full h-screen bg-[url('/bg.jpg')] bg-cover"></div>
@@ -35,6 +38,9 @@ function Home() {
               detection saves lives.
             </p>
             <Auth label={"Get Started"} />
+            <Button variant={"outline"} onClick={() => {
+              navigate("/heart-disease-predictor"); 
+            }}>Try Heart Disease Risk Predictor</Button>
           </div>
           <div className="">
             <img src="/heart.svg" height={600} width={600} alt="" />

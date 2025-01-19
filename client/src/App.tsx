@@ -8,8 +8,9 @@ import { Toaster } from "sonner";
 import { RecoilRoot } from "recoil";
 import Meeting from "./pages/Meeting";
 import Tools from "./pages/Tools";
-import HeartRiskPredictor from "./components/custom/heart-risk-predictor";
 import Doctors from "./pages/Doctors";
+import HeartRiskPredictor from "./pages/HeartRiskPredictor";
+import HeartRiskPredictorDemo from "./pages/HeartRiskPredictorDemo";
 
 function LayoutWithSidebar({ children }: any) {
   return (
@@ -30,6 +31,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/heart-disease-predictor" element={<HeartRiskPredictorDemo />} />
           <Route
             path="/dashboard"
             element={
