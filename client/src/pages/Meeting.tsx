@@ -4,6 +4,7 @@ import { useRecoilValue } from "recoil";
 
 function Meeting() {
   const user = useRecoilValue(userAtom);
+
   return (
     <div className="w-full ml-8 mt-10">
       <img

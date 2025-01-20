@@ -1,7 +1,9 @@
 
 function DoctorDashboard() {
   return (
-    <div>DoctorDashboard</div>
+    <div className="w-full flex ml-8 mt-10">
+      
+    </div>
   )
 }
 

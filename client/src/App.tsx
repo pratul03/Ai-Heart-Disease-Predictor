@@ -5,15 +5,16 @@ import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/ui/app-sidebar";
 import Dashboard from "./pages/Dashboard";
 import { Toaster } from "sonner";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot} from "recoil";
 import Meeting from "./pages/Meeting";
 import Tools from "./pages/Tools";
 import Doctors from "./pages/Doctors";
 import HeartRiskPredictor from "./pages/HeartRiskPredictor";
 import HeartRiskPredictorDemo from "./pages/HeartRiskPredictorDemo";
-import DoctorDashboard from "./pages/DoctorDashboard";
+import DoctorDashboard from "./pages/doctor/DoctorDashboard";
 import React from "react";
 import AppSidebarD from "./components/custom/app-sidebar-doctor";
+import DoctorAppointment from "./pages/doctor/DoctorAppointment";
 
 type LayoutWithSidebarProps = {
   children: React.ReactNode; 
@@ -91,10 +92,18 @@ function App() {
             }
           />
           <Route
-            path="/doctor-dashboard"
+            path={`/doctor-dashboard`}
             element={
               <LayoutWithSidebarForDoctor>
                 <DoctorDashboard />
+              </LayoutWithSidebarForDoctor>
+            }
+          />
+          <Route
+            path={`/doctor-appointments`}
+            element={
+              <LayoutWithSidebarForDoctor>
+                <DoctorAppointment />
               </LayoutWithSidebarForDoctor>
             }
           />

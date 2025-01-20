@@ -1,6 +1,6 @@
 import { Exercise } from "@/components/custom/exercise-chart";
 import Meetings from "@/components/custom/meetings";
-import Profile from "@/components/custom/profile";
+import WelcomeNote from "@/components/custom/welcome-note";
 import { userAtom } from "@/store/atom/atom";
 import { useRecoilValue } from "recoil";
 
@@ -16,7 +16,7 @@ function Dashboard() {
       />
       <div className="w-full grid grid-flow-col justify-between gap-2">
           <div className="gap-4">
-            <Profile />
+            <WelcomeNote/>
           </div>
           <div className="">
             <Meetings />
