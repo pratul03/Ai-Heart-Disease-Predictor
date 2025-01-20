@@ -7,7 +7,7 @@ import {
 
 import { userAtom } from "@/store/atom/atom";
 import { useRecoilValue } from "recoil";
-export default function Profile() {
+export default function WelcomeNote() {
   const healthQuotes: string[] = [
     "Health is the greatest gift, contentment the greatest wealth, faithfulness the best relationship. - Buddha",
     "Take care of your body. It’s the only place you have to live. - Jim Rohn",

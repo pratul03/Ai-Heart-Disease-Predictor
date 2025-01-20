@@ -14,14 +14,9 @@ import { Codesandbox, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { AuthDoctor } from "@/components/custom/auth-dialog-doctor";
 
 function Home() {
-  const customCommandMap = {
-    npm: "npm run shadcn add button",
-    yarn: "yarn shadcn add button",
-    pnpm: "pnpm dlx shadcn@latest add button",
-    bun: "bun x shadcn@latest add button",
-  };
   const navigate = useNavigate();
   return (
     <>
@@ -30,7 +25,11 @@ function Home() {
         <div className="w-full m-5 pb-5 top-0 flex justify-between items-center border-b-2 border-cyan-800">
           <div className="ml-5 text-xl font-mono font-bold">Logo</div>
           <Navigation />
+
+          <div>
+            <AuthDoctor label={"Doctor Login"} />
           <Auth label={"Join Us"} />
+          </div>
         </div>
         <div className="w-full my-4 px-20 py-10 flex flex-row justify-between items-center">
           <div className="p-20">

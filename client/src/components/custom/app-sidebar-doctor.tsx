@@ -29,17 +29,17 @@ import {
 import { useRecoilValue } from "recoil";
 import { doctorAtom } from "@/store/atom/atom";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const items = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: `/doctor-dashboard`,
     icon: Home,
   },
   {
-    title: "Meetings",
-    url: "/meetings",
+    title: "Appointments",
+    url: "/doctor-appointments",
     icon: Calendar,
   },
   {
@@ -75,10 +75,10 @@ function AppSidebarD() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title}>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span className="font-semibold tracking-wide">{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
