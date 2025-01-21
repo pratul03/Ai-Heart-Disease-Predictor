@@ -67,7 +67,16 @@ export const userAtom = atom<{
     },
   });
 
-export const predictionResultAtom = atom({
+export const predictionResultAtom = atom<{
+  message : string,
+  probablity : number,
+  suggested_doctors: Array<object>,
+}>({
   key: "predictionResultAtom",
-  default: <{ result: string; probability: number }>{},
-});
+  default: {
+    message: "",
+    probablity: 0,
+    suggested_doctors: [],
+  },
+})
+  

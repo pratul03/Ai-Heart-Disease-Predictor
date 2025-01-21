@@ -5,9 +5,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { userAtom } from "@/store/atom/atom";
-import { useRecoilValue } from "recoil";
-export default function WelcomeNote() {
+export default function WelcomeNote({user} : {user: any}) {
   const healthQuotes: string[] = [
     "Health is the greatest gift, contentment the greatest wealth, faithfulness the best relationship. - Buddha",
     "Take care of your body. It’s the only place you have to live. - Jim Rohn",
@@ -21,7 +19,6 @@ export default function WelcomeNote() {
     "Good health and good sense are two of life's greatest blessings. - Publilius Syrus",
   ];
 
-  const user = useRecoilValue(userAtom);
   const randomIndex = Math.floor(Math.random() * healthQuotes.length);
   const healthQuote = healthQuotes[randomIndex];
 

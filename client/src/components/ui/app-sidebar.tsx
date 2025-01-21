@@ -77,7 +77,7 @@ const items = [
   },
   {
     title: "Contact Us",
-    url: "#",
+    url: "/contact-us",
     icon: ContactRound,
   },
 ];
@@ -92,7 +92,7 @@ export function AppSidebar() {
         navigate("/");
       }
     })()
-  })
+  },[])
 
   return (
     <Sidebar collapsible="icon" variant="floating">

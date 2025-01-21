@@ -21,6 +21,10 @@ import {
 } from "@/components/ui/select";
 
 import { Button } from "../ui/button";
+import { toast } from "sonner";
+import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { predictionResultAtom } from "@/store/atom/atom";
 
 interface FormErrors {
   [key: string]: string;
@@ -148,8 +152,23 @@ const form_inputs = [
 ];
 
 function HeartRiskPredictorForm() {
-  const [data, setData] = useState<FormData>({});
+  const [data, setData] = useState<FormData>({
+    age: 0,
+    sex: 0,
+    cp: 0,
+    trestbps: 0,
+    chol: 0,
+    fbs: 0,
+    restecg: 0,
+    thalach: 0,
+    exang: 0,
+    oldpeak: 0,
+    slope: 0,
+    ca: 0,
+    thal: 0,
+  });
   const [errors, setErrors] = useState<FormErrors>({});
+  const result = useSetRecoilState(predictionResultAtom);
 
   const handleValidation = (): boolean => {
     let isValid = true;
@@ -187,10 +206,23 @@ function HeartRiskPredictorForm() {
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (handleValidation()) {
-      console.log("Submitted Data:", data);
+      toast.promise(axios.post("http://192.168.0.116:5000/predict", data), {
+        loading: "Calculating...",
+        success: (response) => {
+          result({
+            message: response.data.message,
+            probablity: parseInt(response.data.probability, 10),
+            suggested_doctors: response.data.suggested_doctors,
+          });
+          return `Prediction is showing now.`;
+        },
+        error: (error) => {
+          return `Error: ${error.message}`;
+        },
+      });
     } else {
       console.log("Validation Failed:", errors);
     }
@@ -225,6 +257,7 @@ function HeartRiskPredictorForm() {
                           [input.name]: parseInt(value, 10),
                         })
                       }
+                      value={String(data[input.name])} // Bind value to state
                     >
                       <SelectTrigger className="w-[200px]">
                         <SelectValue placeholder={input.placeholder} />
@@ -251,6 +284,7 @@ function HeartRiskPredictorForm() {
                     <Input
                       type="number"
                       placeholder={input.placeholder}
+                      value={data[input.name] as number} // Bind value to state
                       onChange={(e) => {
                         const value = parseInt(e.target.value, 10);
                         setData({ ...data, [input.name]: value });
@@ -271,24 +305,38 @@ function HeartRiskPredictorForm() {
               </div>
             ))}
             <div className="col-span-2 flex justify-center items-center space-x-5">
-            <Button
-              type="submit"
-              variant={"secondary"}
-              className=" w-40 h-10 text-lg self-end justify-self-center"
-            >
-              Submit
-            </Button>
-            <Button
-              type="button"
-              variant={"outline"}
-              className="w-40 h-10 text-lg self-end justify-self-center"
-              onClick={() => {
-                setData({});
-                setErrors({});
-              }}
-            >
-              Reset
-            </Button>
+              <Button
+                type="submit"
+                variant={"secondary"}
+                className="w-40 h-10 text-lg self-end justify-self-center"
+              >
+                Submit
+              </Button>
+              <Button
+                type="button"
+                variant={"outline"}
+                className="w-40 h-10 text-lg self-end justify-self-center"
+                onClick={() => {
+                  setData({
+                    age: 0,
+                    sex: 0,
+                    cp: 0,
+                    trestbps: 0,
+                    chol: 0,
+                    fbs: 0,
+                    restecg: 0,
+                    thalach: 0,
+                    exang: 0,
+                    oldpeak: 0,
+                    slope: 0,
+                    ca: 0,
+                    thal: 0,
+                  });
+                  setErrors({});
+                }}
+              >
+                Reset
+              </Button>
             </div>
           </form>
         </CardContent>
