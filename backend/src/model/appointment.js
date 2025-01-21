@@ -6,11 +6,13 @@ const appointmentSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   }, // Reference to the user
+  user_name: { type: String, required: true }, // Add userName field
   doctor_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Doctor",
     required: true,
   }, // Reference to the doctor
+  doctor_name: { type: String, required: true }, // Add doctorName field
   type: {
     type: String,
     enum: ["hospital", "chamber"],
