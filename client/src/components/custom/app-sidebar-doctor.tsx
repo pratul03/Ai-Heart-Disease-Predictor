@@ -30,6 +30,7 @@ import { useRecoilValue } from "recoil";
 import { doctorAtom } from "@/store/atom/atom";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const items = [
   {
@@ -54,7 +55,7 @@ const items = [
   },
   {
     title: "Contact Us",
-    url: "#",
+    url: "/contact-us-doctor",
     icon: ContactRound,
   },
 ];
@@ -62,6 +63,14 @@ const items = [
 function AppSidebarD() {
   const user = useRecoilValue(doctorAtom);
   const navigate = useNavigate();
+
+  useEffect(() => {
+      (async () => {
+        if (!localStorage.getItem("token")) {
+          navigate("/");
+        }
+      })()
+    },[])
 
   return (
     <Sidebar collapsible="icon" variant="floating">

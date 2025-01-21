@@ -15,6 +15,7 @@ import DoctorDashboard from "./pages/doctor/DoctorDashboard";
 import React from "react";
 import AppSidebarD from "./components/custom/app-sidebar-doctor";
 import DoctorAppointment from "./pages/doctor/DoctorAppointment";
+import ContactUs from "./components/custom/contact-us";
 
 type LayoutWithSidebarProps = {
   children: React.ReactNode; 
@@ -92,6 +93,14 @@ function App() {
             }
           />
           <Route
+            path="/contact-us"
+            element={
+              <LayoutWithSidebar>
+                <ContactUs />
+              </LayoutWithSidebar>
+            }
+          />
+          <Route
             path={`/doctor-dashboard`}
             element={
               <LayoutWithSidebarForDoctor>
@@ -104,6 +113,14 @@ function App() {
             element={
               <LayoutWithSidebarForDoctor>
                 <DoctorAppointment />
+              </LayoutWithSidebarForDoctor>
+            }
+          />
+          <Route
+            path={`/contact-us-doctor`}
+            element={
+              <LayoutWithSidebarForDoctor>
+                <ContactUs />
               </LayoutWithSidebarForDoctor>
             }
           />

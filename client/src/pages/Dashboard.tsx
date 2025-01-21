@@ -16,7 +16,7 @@ function Dashboard() {
       />
       <div className="w-full grid grid-flow-col justify-between gap-2">
           <div className="gap-4">
-            <WelcomeNote/>
+            <WelcomeNote user={user}/>
           </div>
           <div className="">
             <Meetings />

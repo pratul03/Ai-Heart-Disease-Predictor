@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -31,14 +31,6 @@ export function AuthDoctor({ label }: { label: string }) {
     email: "",
     password: "",
   });
-
-  useEffect(() => {
-      (async () => {
-        if (!localStorage.getItem("token")) {
-          navigate("/");
-        }
-      })()
-    })
 
   return (
     <Dialog>
@@ -103,8 +95,8 @@ export function AuthDoctor({ label }: { label: string }) {
                           return "Signed in successfully!";
                         },
                         error: (response) => {
-                          return response.data
-                            ? response.data.message
+                          return response
+                            ? response.message
                             : "Internal server error!";
                         },
                       }
