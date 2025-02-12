@@ -1,5 +1,7 @@
 /* eslint-disable no-var */
 import mongoose, { Mongoose } from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
 declare global {
   var mongoose: {
@@ -9,7 +11,6 @@ declare global {
 }
 
 const MONGODB_URI = process.env.MONGODB_URI!;
-console.log("MONGODB_URI", MONGODB_URI);
 
 if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable");

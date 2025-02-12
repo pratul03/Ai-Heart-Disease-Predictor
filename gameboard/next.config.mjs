@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: ["res.cloudinary.com"], // Add Cloudinary domain here
+  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Exclude problematic dependencies from being processed by Webpack

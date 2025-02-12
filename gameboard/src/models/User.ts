@@ -16,6 +16,9 @@ export interface IUser extends Document {
   createdAt: Date;
 }
 
+const defaultAvatar =
+  "https://res.cloudinary.com/dxnodvf4b/image/upload/v1736857549/avatar3_h74xpz.png";
+
 const userSchema: Schema = new Schema({
   name: { type: String, required: true },
   email: {
@@ -60,7 +63,7 @@ const userSchema: Schema = new Schema({
       },
     },
   },
-  avatar: { type: String, default: "default1.png" },
+  avatar: { type: String, default: defaultAvatar },
   badges: [{ type: String }],
   createdAt: { type: Date, default: Date.now },
 });

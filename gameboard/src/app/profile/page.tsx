@@ -1,111 +1,67 @@
-"use client"; // Mark as a Client Component
+"use client";
 
-import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import UploadPhoto from "@/components/UploadPhoto"; // Import the Client Component
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import UpdateProfile from "@/components/update-profile"; // Import the UpdateProfile component
+import Image from "next/image";
 
 export default function ProfilePage() {
-  const { data: session } = useSession(); // Get the user session
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const { data: session } = useSession();
 
-  // Redirect to login if the user is not authenticated
   if (!session) {
     redirect("/login");
   }
 
-  // Handle form submission
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const avatar = avatarUrl || (session.user?.image as string);
-
-    try {
-      // Call the API route to update the profile
-      const response = await fetch("/api/profile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, avatar }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update profile");
-      }
-
-      const updatedUser = await response.json();
-      console.log("Updated user:", updatedUser);
-
-      // Optionally, show a success message or redirect
-      alert("Profile updated successfully!");
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile. Please try again.");
-    }
-  };
-
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
-      <h1>Profile Page</h1>
+      <Card>
+        <CardHeader>
+          <CardTitle>Profile</CardTitle>
+          <CardDescription>Your profile information</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div style={{ marginBottom: "20px" }}>
+            <label>Avatar:</label>
+            <Image
+              src={session.user?.avatar || ""}
+              alt="Avatar"
+              width={100}
+              height={100}
+              className="rounded-full"
+            />
+          </div>
 
-      {/* Profile Update Form */}
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "20px" }}>
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            defaultValue={session.user?.name || ""}
-            style={{ width: "100%", padding: "10px", marginTop: "5px" }}
-          />
-        </div>
+          <div style={{ marginBottom: "20px" }}>
+            <label>Name:</label>
+            <p>{session.user?.name}</p>
+          </div>
 
-        <div style={{ marginBottom: "20px" }}>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            defaultValue={session.user?.email || ""}
-            style={{ width: "100%", padding: "10px", marginTop: "5px" }}
-          />
-        </div>
+          <div style={{ marginBottom: "20px" }}>
+            <label>Email:</label>
+            <p>{session.user?.email}</p>
+          </div>
 
-        <div style={{ marginBottom: "20px" }}>
-          <label>Avatar:</label>
-          {/* Use the UploadPhoto component */}
-          <UploadPhoto
-            onUpload={(url) => {
-              setAvatarUrl(url); // Update the avatar URL in state
-            }}
-          />
-          <input
-            type="hidden"
-            id="avatar"
-            name="avatar"
-            value={avatarUrl || ""}
-          />
-        </div>
+          <div style={{ marginBottom: "20px" }}>
+            <label>Age:</label>
+            <p>{session.user?.age || "Not provided"}</p>
+          </div>
 
-        <button
-          type="submit"
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#0070f3",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Update Profile
-        </button>
-      </form>
+          <div style={{ marginBottom: "20px" }}>
+            <label>Gender:</label>
+            <p>{session.user?.sex || "Not provided"}</p>
+          </div>
+
+          {/* Button to open the UpdateProfile component */}
+          <UpdateProfile />
+        </CardContent>
+      </Card>
     </div>
   );
 }

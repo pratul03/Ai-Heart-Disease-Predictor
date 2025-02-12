@@ -20,12 +20,12 @@ export async function POST(request: Request) {
     }
 
     // Parse the request body
-    const { name, email, avatar } = await request.json();
+    const { name, email, avatar, age, sex } = await request.json();
 
     // Update the user profile in the database
     const updatedUser = await User.findByIdAndUpdate(
       session.user?.id,
-      { name, email, avatar },
+      { name, email, avatar, age, sex },
       { new: true } // Return the updated document
     );
 
