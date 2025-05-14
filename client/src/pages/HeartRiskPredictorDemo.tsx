@@ -3,13 +3,13 @@ import HeartRiskPredictorForm from "@/components/custom/heart-risk-predictor-for
 import Navigation from "@/components/custom/navigation";
 import PredictResult from "@/components/custom/predict-result";
 import { Button } from "@/components/ui/button";
-import { predictionResultAtom } from "@/store/atom/atom";
+import { predictionResultAtom } from "@/store/atom/predictionResultAtom";
+import { useAtom } from "jotai/react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
 
 function HeartRiskPredictorDemo() {
-  const [result, setResult] = useRecoilState(predictionResultAtom);
+  const [result, setResult] = useAtom(predictionResultAtom);
   const navigate = useNavigate();
 
   return (

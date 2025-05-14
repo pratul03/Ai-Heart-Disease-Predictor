@@ -14,31 +14,52 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { toast } from "sonner";
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import { toast } from "sonner";
 
 function Meetings() {
 
-  const [meetings, setMeetings] = useState({
-    _id: "",
-    dname: "",
-    topic: "",
-    time: ""
-  });
-  const date = new Date();
-    console.log(date)
+  // const [meetings, setMeetings] = useState({
+  //   _id: "",
+  //   dname: "",
+  //   topic: "",
+  //   time: ""
+  // });
+  // const date = new Date();
+  //   console.log(date)
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await axios.get("http://192.168.0.108:8080/api/appointments/slots?doctor_id=678d1d3598035f0b57272406&type=chamber&date=2025-01-21");
-        setMeetings(data);
-      } catch (error) {
-        toast.error("Failed to fetch meetings");
-      }
-    })()
-  },[])
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const { data } = await axios.get(`${import.meta.env.VITE_domain_uri}/appointments/slots?doctor_id=678d1d3598035f0b57272406&type=chamber&date=2025-01-21');
+  //       setMeetings(data);
+  //     } catch (error) {
+  //       toast.error("Failed to fetch meetings");
+  //     }
+  //   })()
+  // },[])
+  const meetings = [
+    {
+      _id: "1",
+      dname: "Dr. Smith",
+      topic: "Health Checkup",
+      time: "10:00 AM",
+    },
+    {
+      _id: "2",
+      dname: "Dr. Jane",
+      topic: "Dental Consultation",
+      time: "11:30 AM",
+    },
+    {
+      _id: "3",
+      dname: "Dr. Brown",
+      topic: "Therapy Session",
+      time: "2:00 PM",
+    },
+  ];
+  
 
   return (
     <div>
@@ -58,21 +79,21 @@ function Meetings() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {meetings._id ?  (
-                <TableRow key={meetings._id}>
-                  <TableCell className="font-medium">
-                    {meetings._id}
-                  </TableCell>
-                  <TableCell>{meetings.dname}</TableCell>
-                  <TableCell>{meetings.topic}</TableCell>
-                  <TableCell>{meetings.time}</TableCell>
-                  <TableCell className="text-right">
-                    {meetings.time && <Button variant={"outline"}>Join</Button>}
-                  </TableCell>
-                </TableRow>
-              ): <TableRow>
-                    <TableCell colSpan={5} className="text-center text-slate-400 text-lg">No meetings scheduled</TableCell>
-                </TableRow>}
+              {meetings ?  meetings.map((meeting) => (
+                  <TableRow key={meeting._id}>
+                    <TableCell className="font-medium">
+                      {meeting._id}
+                    </TableCell>
+                    <TableCell>{meeting.dname}</TableCell>
+                    <TableCell>{meeting.topic}</TableCell>
+                    <TableCell>{meeting.time}</TableCell>
+                    <TableCell className="text-right">
+                      {meeting.time && <Button variant={"outline"}>Join</Button>}
+                    </TableCell>
+                  </TableRow>
+                )): <TableRow>
+                      <TableCell colSpan={5} className="text-center text-slate-400 text-lg">No meetings scheduled</TableCell>
+                  </TableRow>}
             </TableBody>
           </Table>
         </CardContent>

@@ -23,8 +23,8 @@ import {
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import axios from "axios";
-import { useSetRecoilState } from "recoil";
-import { predictionResultAtom } from "@/store/atom/atom";
+import { useSetAtom } from "jotai/react";
+import { predictionResultAtom } from "@/store/atom/predictionResultAtom";
 
 interface FormErrors {
   [key: string]: string;
@@ -168,7 +168,7 @@ function HeartRiskPredictorForm() {
     thal: 0,
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const result = useSetRecoilState(predictionResultAtom);
+  const result = useSetAtom(predictionResultAtom);
 
   const handleValidation = (): boolean => {
     let isValid = true;
@@ -209,7 +209,7 @@ function HeartRiskPredictorForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (handleValidation()) {
-      toast.promise(axios.post("http://192.168.0.116:5000/predict", data), {
+      toast.promise(axios.post(`${import.meta.env.VITE_prediction_uri}/predict`, data), {
         loading: "Calculating...",
         success: (response) => {
           result({

@@ -15,15 +15,21 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { AuthDoctor } from "@/components/custom/auth-dialog-doctor";
+import { useEffect } from "react";
 
 function Home() {
   const navigate = useNavigate();
+  useEffect(() => {
+    if(localStorage.getItem('token')) {
+      navigate('/dashboard')
+    }
+  },[])
   return (
     <>
       <div className="z-0 w-full h-screen bg-[url('/bg.jpg')] bg-cover"></div>
       <div className="absolute top-0 backdrop-blur-md w-full h-max flex flex-col items-center scrollbar">
         <div className="w-full m-5 pb-5 top-0 flex justify-between items-center border-b-2 border-cyan-800">
-          <div className="ml-5 text-xl font-mono font-bold">Logo</div>
+          <div className="ml-5 text-xl font-mono font-bold">Heart Sync</div>
           <Navigation />
 
           <div>
@@ -65,9 +71,9 @@ function Home() {
               Our Most Recommended Doctors
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-10">
-              {doctors.slice(0, 4).map((doctor) => {
+              {doctors.slice(0, 4).map((doctor, index) => {
                 return (
-                  <Card className="w-[320px] h-[450px]">
+                  <Card className="w-[320px] h-[450px]" key={index}>
                     <CardHeader>
                       <CardTitle className="rounded-md m-0">
                         <img
