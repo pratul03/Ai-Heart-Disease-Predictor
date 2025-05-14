@@ -1,8 +1,6 @@
 import HeartRiskPredictorForm from "@/components/custom/heart-risk-predictor-form";
 import PredictResult from "@/components/custom/predict-result";
 import { Button } from "@/components/ui/button";
-import { predictionResultAtom } from "@/store/atom/atom";
-import { useRecoilValue } from "recoil";
 import {
   Dialog,
   DialogContent,
@@ -11,9 +9,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { predictionResultAtom } from "@/store/atom/predictionResultAtom";
+import { useAtomValue } from "jotai/react";
 
 const HeartRiskPredictor = () => {
-  const result = useRecoilValue(predictionResultAtom);
+  const result = useAtomValue(predictionResultAtom);
   return (
     <div className="w-full ml-8 mt-10">
       <HeartRiskPredictorForm />

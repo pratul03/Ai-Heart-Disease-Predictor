@@ -32,7 +32,7 @@ function Meetings() {
   // useEffect(() => {
   //   (async () => {
   //     try {
-  //       const { data } = await axios.get("http://192.168.0.108:8080/api/appointments/slots?doctor_id=678d1d3598035f0b57272406&type=chamber&date=2025-01-21");
+  //       const { data } = await axios.get(`${import.meta.env.VITE_domain_uri}/appointments/slots?doctor_id=678d1d3598035f0b57272406&type=chamber&date=2025-01-21');
   //       setMeetings(data);
   //     } catch (error) {
   //       toast.error("Failed to fetch meetings");

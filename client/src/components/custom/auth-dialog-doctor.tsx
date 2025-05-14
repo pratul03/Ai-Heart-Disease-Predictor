@@ -20,12 +20,12 @@ import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { doctorAtom } from "@/store/atom/atom";
+import { useSetAtom } from "jotai/react";
+import { doctorAtom } from "@/store/atom/doctorAtom";
 
 export function AuthDoctor({ label }: { label: string }) {
   const navigate = useNavigate();
-  const setDoctor = useSetRecoilState(doctorAtom);
+  const setDoctor = useSetAtom(doctorAtom);
 
   const [signin, setSignin] = useState({
     email: "",
@@ -83,7 +83,7 @@ export function AuthDoctor({ label }: { label: string }) {
                   onClick={async () => {
                     toast.promise(
                       axios.post(
-                        "http://192.168.0.108:8080/api/doctors/login/docs/",
+                        `${import.meta.env.VITE_domain_uri}/api/doctors/login/docs/`,
                         signin
                       ),
                       {

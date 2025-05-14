@@ -28,12 +28,12 @@ import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { userAtom } from "@/store/atom/atom";
+import { useSetAtom } from "jotai/react";
+import { userAtom } from "@/store/atom/userAtom";
 
 export function Auth({ label }: { label: string }) {
   const navigate = useNavigate();
-  const setUser = useSetRecoilState(userAtom);
+  const setUser = useSetAtom(userAtom);
 
   const [signin, setSignin] = useState({
     email: "",
@@ -100,7 +100,7 @@ export function Auth({ label }: { label: string }) {
                   onClick={async () => {
                     toast.promise(
                       axios.post(
-                        "http://192.168.0.108:8080/api/auth/login",
+                        `${import.meta.env.VITE_domain_uri}/api/auth/login`,
                         signin
                       ),
                       {
@@ -212,7 +212,7 @@ export function Auth({ label }: { label: string }) {
                   onClick={async () => {
                     toast.promise(
                       axios.post(
-                        "http://192.168.0.121:8080/api/auth/signup",
+                        `${import.meta.env.VITE_domain_uri}/api/auth/signup`,
                         signup
                       ),
                       {

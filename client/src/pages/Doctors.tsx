@@ -15,8 +15,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { userAtom } from "@/store/atom/atom";
-import { useRecoilValue } from "recoil";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -196,14 +194,8 @@ export const doctors = [
 ];
 
 function Doctors() {
-  const user = useRecoilValue(userAtom);
   return (
-    <div className="w-full ml-8 mt-10">
-      <img
-        src={user.avatar || "/pro.jpg"}
-        alt=""
-        className="absolute top-0 right-0 w-12 h-12 m-2.5 rounded-full"
-      />
+    <div className="w-full pl-3">
       <div className="mt-2">
         <p className="text-4xl text-center font-semibold text-cyan-400">
           Most Recommened Doctors

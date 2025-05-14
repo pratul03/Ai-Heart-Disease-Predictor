@@ -21,6 +21,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -39,11 +40,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRecoilValue } from "recoil";
-import { userAtom } from "@/store/atom/atom";
 import { Button } from "./button";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useAtomValue } from "jotai/react";
+import { userAtom } from "@/store/atom/userAtom";
+
 const items = [
   {
     title: "Dashboard",
@@ -83,22 +84,23 @@ const items = [
 ];
 
 export function AppSidebar() {
-  const user = useRecoilValue(userAtom);
+  const user = useAtomValue(userAtom);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    (async () => {
-      if (!localStorage.getItem("token")) {
-        navigate("/");
-      }
-    })()
-  },[])
+  // useEffect(() => {
+  //   (async () => {
+  //     if (!localStorage.getItem("token")) {
+  //       navigate("/");
+  //     }
+  //   })()
+  // },[])
 
   return (
-    <Sidebar collapsible="icon" variant="floating">
-      <SidebarHeader className="items-center">
+    <Sidebar collapsible="icon" variant="sidebar">
+      <SidebarHeader className="py-4 items-center">
         <Codesandbox className="text-green-500" />
       </SidebarHeader>
+      <SidebarSeparator />
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
